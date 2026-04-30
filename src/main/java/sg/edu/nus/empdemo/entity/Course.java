@@ -34,4 +34,60 @@ public class Course {
     private Employee employee;
 
 
+    public Course(){}
+
+    
+
+
+    public Course(String name, Double durationInMonths, LocalDate starts) {
+        this.name = name;
+        this.durationInMonths = durationInMonths;
+        this.starts = starts;
+    }
+
+
+
+
+    public String getName() {
+        return name;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    public Double getDurationInMonths() {
+        return durationInMonths;
+    }
+
+
+    public void setDurationInMonths(Double durationInMonths) {
+        this.durationInMonths = durationInMonths;
+    }
+
+
+    public LocalDate getStarts() {
+        return starts;
+    }
+
+
+    public void setStarts(LocalDate starts) {
+        this.starts = starts;
+    }
+
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+
+    
+
 }
