@@ -55,6 +55,26 @@ public class CourseRepositoryTest {
         assertThat(result).filteredOnAssertions(course -> assertThat(course.getStarts()).isAfter(LocalDate.of(2026, 10,01)));
         assertThat(result).hasSize(1);
     }
+    //findByDurationInMonthsGreaterThanEqual
+
+    @Test
+    @DisplayName("Find Courses By DurationInMonths Greater Than or Equal")
+    void findByDurationInMonthsGreaterThanEqual(){
+        Course scienceCourse = new Course("Science", 9.0, LocalDate.of(2026, 10, 24));
+        Course mathCourse = new Course("Mathemtics", 8.0, LocalDate.of(2026,9, 24));
+        Course simpleMathCourse = new Course("Mathemtics", 1.0, LocalDate.of(2026,11, 24));
+
+        this.testEntityManager.persistAndFlush(scienceCourse);
+        this.testEntityManager.persistAndFlush(mathCourse);
+        this.testEntityManager.persistAndFlush(simpleMathCourse);
+        this.testEntityManager.clear();
+
+        List<Course> result = courseRepository.findByDurationInMonthsGreaterThanEqual(8.0);
+
+        assertThat(result).filteredOnAssertions(course -> assertThat(course.getDurationInMonths()).isGreaterThanOrEqualTo(8.0));
+        assertThat(result).hasSize(2);
+
+    }
 
 
 }
