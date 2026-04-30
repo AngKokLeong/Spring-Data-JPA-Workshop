@@ -13,5 +13,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>{
     
     List<Course> findByNameContainingIgnoreCase(String Name);
     List<Course> findByStartsAfter(LocalDate date);
+    List<Course> findByDurationInMonthsGreaterThanEqual(Double durationInMonths);
 
 }
