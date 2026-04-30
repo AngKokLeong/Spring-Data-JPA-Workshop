@@ -10,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -25,16 +27,20 @@ public class Employee {
     private String name;
 
 
-    @OneToOne
+    @OneToOne(targetEntity = Department.class)
     @JoinColumn(name="department_id")
     private Department department;
 
-    @ManyToMany
+    @ManyToMany(targetEntity = Project.class)
     @JoinTable(name = "employee_projects")
     private List<Project> projects;
 
-    public void assignDepartment(Department dept){
 
+    @OneToMany(mappedBy = "employee")
+    private List<Course> courses;
+
+    public void assignDepartment(Department dept){
+        
     }
 
     public void enrollInCourse(Course course){
