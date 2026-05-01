@@ -29,4 +29,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long>{
     @EntityGraph(attributePaths="employees") //EntityGraph allows 
     @Query("SELECT p FROM Project p WHERE p.id = ?1")
     List<Project> findByIdWithEmployees(Long id);
+
+    @EntityGraph(attributePaths="employees")
+    @Query("SELECT DISTINCT p FROM Project p JOIN p.employees e WHERE e.id = :employeeId")
+    List<Project> findByEmployeeIdWithProjects(@Param("employeeId") Long employeeId);
 }
