@@ -15,4 +15,6 @@ public interface CourseRepository extends JpaRepository<Course, Long>{
     List<Course> findByStartsAfter(LocalDate date);
     List<Course> findByDurationInMonthsGreaterThanEqual(Double durationInMonths);
 
+    List<Course> findAllByEmployeeId(Long id);
+
 }
