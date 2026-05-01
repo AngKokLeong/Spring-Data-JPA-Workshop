@@ -13,6 +13,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.test.context.TestConstructor;
 
+import sg.edu.nus.empdemo.entity.Employee;
 import sg.edu.nus.empdemo.entity.Project;
 
 @DataJpaTest
@@ -105,5 +106,36 @@ public class ProjectRepositoryTest {
         assertThat(result).filteredOnAssertions(project -> assertThat(project.getStartDate()).isAfterOrEqualTo(startDate)).extracting(Project::getName).contains(projectC.getName(), projectD.getName());
         assertThat(result).filteredOnAssertions(project -> assertThat(project.getEndDate()).isBeforeOrEqualTo(endDate)).extracting(Project::getName).contains(projectC.getName(), projectD.getName());
         assertThat(result).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("Fetch Project and its assigned employees by Project ID")
+    void findByIdWithEmployees(){
+
+        Employee employeeA = new Employee("Test");
+        Employee employeeB = new Employee("TEST B");
+
+        Project projectC = new Project("Project C", "some project description", LocalDate.of(2026, 06, 01), LocalDate.of(2026, 8, 01));
+        Project projectD = new Project("Project D", "some project description", LocalDate.of(2026, 07, 01), LocalDate.of(2026, 9, 01));
+
+        employeeA.joinProject(projectC);
+        employeeB.joinProject(projectC);
+
+        projectC.assignEmployeeIntoProject(employeeA);
+        projectC.assignEmployeeIntoProject(employeeB);
+
+
+        this.testEntityManager.persistAndFlush(projectC);
+
+
+        this.testEntityManager.persistAndFlush(employeeA);
+        this.testEntityManager.persistAndFlush(employeeB);
+
+
+        this.testEntityManager.clear();
+
+        List<Project> projectList = this.projectRepository.findByIdWithEmployees(projectC.getId());
+
+        assertThat(projectList).filteredOnAssertions(project -> assertThat(project.getEmployees().size()).isEqualTo(2)).flatExtracting(Project::getEmployees).extracting(Employee::getName).contains(employeeA.getName(), employeeB.getName());
     }
 }

@@ -87,4 +87,8 @@ public class Project {
         return employees;
     }
 
+    public void assignEmployeeIntoProject(Employee employee){
+        this.employees.add(employee);
+    }
+
 }
