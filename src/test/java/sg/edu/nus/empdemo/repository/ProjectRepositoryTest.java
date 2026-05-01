@@ -138,4 +138,57 @@ public class ProjectRepositoryTest {
 
         assertThat(projectList).filteredOnAssertions(project -> assertThat(project.getEmployees().size()).isEqualTo(2)).flatExtracting(Project::getEmployees).extracting(Employee::getName).contains(employeeA.getName(), employeeB.getName());
     }
+
+    @Test
+    @DisplayName("Find Projects by employeeId")
+    void findByEmployeeIdProjects(){
+
+        Employee employeeA = new Employee("Test");
+        Employee employeeB = new Employee("TEST B");
+        Employee employeeC = new Employee("TEST C");
+        Employee employeeD = new Employee("TEST D");
+
+
+        Project projectC = new Project("Project C", "some project description", LocalDate.of(2026, 06, 01), LocalDate.of(2026, 8, 01));
+
+        employeeA.joinProject(projectC);
+        employeeB.joinProject(projectC);
+        employeeC.joinProject(projectC);
+
+        projectC.assignEmployeeIntoProject(employeeA);
+        projectC.assignEmployeeIntoProject(employeeB);
+        projectC.assignEmployeeIntoProject(employeeC);
+
+        this.testEntityManager.persistAndFlush(projectC);
+
+
+        this.testEntityManager.persistAndFlush(employeeA);
+        this.testEntityManager.persistAndFlush(employeeB);
+
+
+
+        Project projectD = new Project("Project D", "some project description", LocalDate.of(2026, 07, 01), LocalDate.of(2026, 9, 01));
+
+
+        employeeC.joinProject(projectD);
+        employeeD.joinProject(projectD);
+
+        projectD.assignEmployeeIntoProject(employeeC);
+        projectD.assignEmployeeIntoProject(employeeD);
+
+
+        this.testEntityManager.persistAndFlush(projectD);
+
+        this.testEntityManager.persistAndFlush(employeeC);
+        this.testEntityManager.persistAndFlush(employeeD);
+
+        this.testEntityManager.clear();
+
+        List<Project> projectList = this.projectRepository.findByEmployeeIdWithProjects(employeeC.getId());
+
+
+        assertThat(projectList).hasSize(2);
+        //assertThat(projectList).filteredOnAssertions(project -> assertThat(project.getEmployees().size()).isEqualTo(2)).flatExtracting(Project::getEmployees).extracting(Employee::getName).contains(employeeA.getName(), employeeB.getName());
+    }
+    
 }
