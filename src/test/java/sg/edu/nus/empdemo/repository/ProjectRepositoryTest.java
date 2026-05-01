@@ -41,5 +41,21 @@ public class ProjectRepositoryTest {
         assertThat(result.get().getName()).isEqualTo(project.getName());
     }
 
+    @Test
+    @DisplayName("Find Project by partial Project Name while ignoring case")
+    void findProjectByNameContainingIgnoreCase(){
+
+        Project project = new Project("test", "some project description", LocalDate.of(2026, 05, 01), LocalDate.of(2026, 06,01));
+
+        this.testEntityManager.persistAndFlush(project);
+        this.testEntityManager.clear();
+
+        Optional<Project> result = this.projectRepository.findByNameContainingIgnoreCase("te");
+        
+        assertThat(result).isNotEmpty();
+        assertThat(result.get().getName()).isEqualTo(project.getName());
+    }
+    
+
 
 }
