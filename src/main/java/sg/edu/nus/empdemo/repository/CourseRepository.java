@@ -22,4 +22,5 @@ public interface CourseRepository extends JpaRepository<Course, Long>{
     @Query("select c from Course c inner join Employee e on c.employee.id = e.id where c.id = ?1")
     Optional<Course> findByIdWithEmployee(Long courseId);
 
+    List<Course> findByEmployeeIdAndStartsAfter(Long id, LocalDate date);
 }
