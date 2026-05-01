@@ -1,5 +1,6 @@
 package sg.edu.nus.empdemo.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -39,16 +40,47 @@ public class Employee {
     @OneToMany(mappedBy = "employee")
     private List<Course> courses;
 
+    public Employee(){
+        this.projects = new ArrayList<>();
+        this.courses = new ArrayList<>();
+    }
+
+    public Employee(String name){
+        this.name = name;
+        this.projects = new ArrayList<>();
+        this.courses = new ArrayList<>();
+    }
+
+    public Employee(String name, Department department){
+        this.name = name;
+        this.assignDepartment(department);
+        this.projects = new ArrayList<>();
+        this.courses = new ArrayList<>();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void assignDepartment(Department dept){
-        
+        this.department = dept;
     }
 
     public void enrollInCourse(Course course){
-
+        this.courses.add(course);
     }
 
     public void joinProject(Project project){
-
+        this.projects.add(project);
     }
 
 }
