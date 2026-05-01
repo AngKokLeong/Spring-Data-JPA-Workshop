@@ -3,6 +3,7 @@ package sg.edu.nus.empdemo.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +65,7 @@ public class ProjectRepositoryTest {
         Project projectA = new Project("Project A", "some project description", LocalDate.of(2026, 05, 01), LocalDate.of(2026, 6, 01));
         Project projectB = new Project("Project B", "some project description", LocalDate.of(2026, 06, 01), LocalDate.of(2026, 8, 01));
         Project projectC = new Project("Project C", "some project description", LocalDate.of(2026, 07, 01), LocalDate.of(2026, 9, 01));
+       
 
 
         this.testEntityManager.persistAndFlush(projectA);
@@ -78,4 +80,30 @@ public class ProjectRepositoryTest {
 
     }
 
+
+    @Test
+    @DisplayName("Find Projects within a specific start and end date range")
+    void findByDateRange(){
+        Project projectA = new Project("Project A", "some project description", LocalDate.of(2026, 05, 01), LocalDate.of(2026, 6, 01));
+        Project projectB = new Project("Project B", "some project description", LocalDate.of(2026, 05, 10), LocalDate.of(2026, 6, 20));
+        Project projectC = new Project("Project C", "some project description", LocalDate.of(2026, 06, 01), LocalDate.of(2026, 8, 01));
+        Project projectD = new Project("Project D", "some project description", LocalDate.of(2026, 07, 01), LocalDate.of(2026, 9, 01));
+
+
+        this.testEntityManager.persistAndFlush(projectA);
+        this.testEntityManager.persistAndFlush(projectB);
+        this.testEntityManager.persistAndFlush(projectC);
+        this.testEntityManager.persistAndFlush(projectD);
+
+        this.testEntityManager.clear();
+
+        LocalDate startDate = LocalDate.of(2026, 6, 1);
+        LocalDate endDate = LocalDate.of(2026, 9, 01);
+
+        List<Project> result = this.projectRepository.findByDateRange(startDate, endDate);
+        
+        assertThat(result).filteredOnAssertions(project -> assertThat(project.getStartDate()).isAfterOrEqualTo(startDate)).extracting(Project::getName).contains(projectC.getName(), projectD.getName());
+        assertThat(result).filteredOnAssertions(project -> assertThat(project.getEndDate()).isBeforeOrEqualTo(endDate)).extracting(Project::getName).contains(projectC.getName(), projectD.getName());
+        assertThat(result).hasSize(2);
+    }
 }

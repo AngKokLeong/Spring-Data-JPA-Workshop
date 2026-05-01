@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import sg.edu.nus.empdemo.entity.Project;
@@ -17,5 +19,10 @@ public interface ProjectRepository extends JpaRepository<Project, Long>{
     Optional<Project> findByNameContainingIgnoreCase(String projectName);
 
     List<Project> findByEndDateAfter(LocalDate endDate);
+
+    @Query("SELECT p FROM Project p WHERE p.startDate >= :start AND p.startDate <= :end")
+    List<Project> findByDateRange(
+        @Param("start") LocalDate startDate, 
+        @Param("end") LocalDate endDate);
 
 }
