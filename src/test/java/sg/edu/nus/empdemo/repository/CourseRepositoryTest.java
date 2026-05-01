@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -85,7 +86,6 @@ public class CourseRepositoryTest {
 
         Employee employeeA = new Employee("TEST");
         
-
         Course scienceCourse = new Course("Science", 9.0, LocalDate.of(2026, 10, 24));
         Course mathCourse = new Course("Mathemtics", 8.0, LocalDate.of(2026,9, 24));
         Course simpleMathCourse = new Course("Mathemtics", 1.0, LocalDate.of(2026,11, 24));
@@ -114,5 +114,35 @@ public class CourseRepositoryTest {
         assertThat(result).hasSize(2);
     }
 
+    @Test
+    @DisplayName("Find Course by Course ID with the associated Employee")
+    void findCourseByCourseIDWithEmployee(){
+        Employee employeeA = new Employee("TEST");
 
+
+        Course scienceCourse = new Course("Science", 9.0, LocalDate.of(2026, 10, 24));
+        Course mathCourse = new Course("Mathemtics", 8.0, LocalDate.of(2026,9, 24));
+
+
+        // Set the employee to enroll to 1 course first before persisting
+        employeeA.enrollInCourse(mathCourse);
+        this.testEntityManager.persistAndFlush(employeeA);
+
+        //After persisting employee then set each course employee have enrolled to 
+        mathCourse.setEmployee(employeeA);
+    
+
+        // Persist the changes
+        this.testEntityManager.persistAndFlush(scienceCourse);
+        this.testEntityManager.persistAndFlush(mathCourse);
+
+
+        this.testEntityManager.clear();
+
+        Optional<Course> result = courseRepository.findByIdWithEmployee(mathCourse.getId());
+
+        assertThat(result).isNotEmpty();
+        assertThat(result.get().getEmployee().getId()).isEqualTo(employeeA.getId());
+
+    }
 }

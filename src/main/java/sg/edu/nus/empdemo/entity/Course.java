@@ -36,17 +36,15 @@ public class Course {
 
     public Course(){}
 
-    
-
-
     public Course(String name, Double durationInMonths, LocalDate starts) {
         this.name = name;
         this.durationInMonths = durationInMonths;
         this.starts = starts;
     }
 
-
-
+    public Long getId(){
+        return this.id;
+    }
 
     public String getName() {
         return name;
