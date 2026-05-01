@@ -1,5 +1,7 @@
 package sg.edu.nus.empdemo.repository;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +15,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>{
     Optional<Project> findByNameEquals(String projectName);
 
     Optional<Project> findByNameContainingIgnoreCase(String projectName);
+
+    List<Project> findByEndDateAfter(LocalDate endDate);
 
 }
