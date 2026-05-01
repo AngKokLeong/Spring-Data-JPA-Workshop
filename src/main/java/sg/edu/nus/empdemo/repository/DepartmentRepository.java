@@ -9,5 +9,7 @@ import sg.edu.nus.empdemo.entity.Department;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long>{
-    Optional<Department> findByNameEquals(String departmentName);    
+    Optional<Department> findByNameEquals(String departmentName); 
+    
+    Optional<Department> findByNameContainingIgnoreCase(String departmentName);
 }

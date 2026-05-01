@@ -37,5 +37,17 @@ public class DepartmentRepositoryTest {
         assertThat(departmentResult.isPresent()).isEqualTo(true);
     }
 
+    @Test
+    @DisplayName("Find Department by partial department name ignoring case")
+    void findByNameContainingIgnoreCase(){
+        Department department = new Department("English");
+
+        this.testEntityManager.persistAndFlush(department);
+        this.testEntityManager.clear();
+
+        Optional<Department> departmentResult = departmentRepository.findByNameContainingIgnoreCase("ngl");
+
+        assertThat(departmentResult.isPresent()).isEqualTo(true);
+    }
 
 }
