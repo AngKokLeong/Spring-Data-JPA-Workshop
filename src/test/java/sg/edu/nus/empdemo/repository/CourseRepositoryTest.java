@@ -145,4 +145,29 @@ public class CourseRepositoryTest {
         assertThat(result.get().getEmployee().getId()).isEqualTo(employeeA.getId());
 
     }
+
+    @Test
+    @DisplayName("Find courses by Employee ID that starts after a specific date")
+    void findByEmployeeIdAndDurationInMonthsGreaterThanEqual(){
+
+        Employee employeeA = new Employee("TEST");
+
+
+        Course mathCourse = new Course("Mathemtics", 8.0, LocalDate.of(2026,9, 24));
+  
+
+        employeeA.enrollInCourse(mathCourse);
+        this.testEntityManager.persistAndFlush(employeeA);
+
+        mathCourse.setEmployee(employeeA);
+
+        this.testEntityManager.persistAndFlush(mathCourse);
+        this.testEntityManager.clear();
+
+        List<Course> result = courseRepository.findByEmployeeIdAndStartsAfter(employeeA.getId(), LocalDate.of(2026, 9, 1));
+
+        assertThat(result).filteredOnAssertions(course -> assertThat(course.getStarts()).isAfter(LocalDate.of(2026, 9,01)));
+        assertThat(result).hasSize(1);
+
+    }
 }
