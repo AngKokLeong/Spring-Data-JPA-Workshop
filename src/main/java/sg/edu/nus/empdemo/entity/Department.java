@@ -33,6 +33,11 @@ public class Department {
         this.employee = employee;
     }
 
+    public Long getId(){
+        return this.id;
+    }
+
+
     public String getName() {
         return name;
     }
