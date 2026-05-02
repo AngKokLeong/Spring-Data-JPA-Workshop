@@ -21,7 +21,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>{
 
     List<Project> findByEndDateAfter(LocalDate endDate);
 
-    @Query("SELECT p FROM Project p WHERE p.startDate >= :start AND p.endDate < :end")
+    @Query("SELECT p FROM Project p WHERE p.startDate >= :start AND p.endDate <= :end")
     List<Project> findByDateRange(
         @Param("start") LocalDate startDate, 
         @Param("end") LocalDate endDate);
