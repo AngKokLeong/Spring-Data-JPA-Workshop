@@ -9,6 +9,7 @@ import org.springframework.boot.jpa.test.autoconfigure.TestEntityManager;
 import org.springframework.test.context.TestConstructor;
 
 import sg.edu.nus.empdemo.entity.Department;
+import sg.edu.nus.empdemo.entity.Employee;
 
 @DataJpaTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -49,5 +50,34 @@ public class DepartmentRepositoryTest {
 
         assertThat(departmentResult.isPresent()).isEqualTo(true);
     }
+
+    @Test
+    @DisplayName("Fetch a department and its assigned employee by Department ID")
+    void findByIdWithEmployee(){
+        
+        Employee employeeA = new Employee("EmployeeA");
+        Department englishDepartment = new Department("English_Department");
+
+
+        this.testEntityManager.persistAndFlush(employeeA);
+        this.testEntityManager.persistAndFlush(englishDepartment);
+
+        employeeA.assignDepartment(englishDepartment);
+        englishDepartment.setEmployee(employeeA);
+
+
+        this.testEntityManager.persistAndFlush(employeeA);
+        this.testEntityManager.persistAndFlush(englishDepartment);
+
+
+
+        this.testEntityManager.clear();
+
+        Optional<Department> departmentResult = departmentRepository.findByIdWithEmployee(englishDepartment.getId());
+
+        assertThat(departmentResult.isPresent()).isEqualTo(true);
+    }
+
+
 
 }
